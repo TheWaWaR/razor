@@ -1,11 +1,21 @@
 const std = @import("std");
+const Target = std.Target;
 
 pub fn build(b: *std.build.Builder) void {
-    // Standard target options allows the person running `zig build` to choose
-    // what target to build for. Here we do not override the defaults, which
-    // means any target is allowed, and the default is native. Other options
-    // for restricting supported target set are available.
-    const target = b.standardTargetOptions(.{});
+    var sub_set = Target.Cpu.Feature.Set.empty;
+    const rv64_m: Target.riscv.Feature = .m;
+    const rv64_a: Target.riscv.Feature = .a;
+    const rv64_c: Target.riscv.Feature = .c;
+    sub_set.addFeature(@enumToInt(rv64_m));
+    sub_set.addFeature(@enumToInt(rv64_a));
+    sub_set.addFeature(@enumToInt(rv64_c));
+
+    const target = std.zig.CrossTarget{
+        .cpu_arch = Target.Cpu.Arch.riscv64,
+        .os_tag = Target.Os.Tag.freestanding,
+        .abi = Target.Abi.none,
+        .cpu_features_sub = sub_set,
+    };
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
