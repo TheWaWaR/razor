@@ -1,27 +1,18 @@
 const std = @import("std");
-const Target = std.Target;
 
 pub fn build(b: *std.build.Builder) void {
-    var sub_set = Target.Cpu.Feature.Set.empty;
-    const rv64_m: Target.riscv.Feature = .m;
-    const rv64_a: Target.riscv.Feature = .a;
-    const rv64_c: Target.riscv.Feature = .c;
-    sub_set.addFeature(@enumToInt(rv64_m));
-    sub_set.addFeature(@enumToInt(rv64_a));
-    sub_set.addFeature(@enumToInt(rv64_c));
-
-    const target = std.zig.CrossTarget{
-        .cpu_arch = Target.Cpu.Arch.riscv64,
-        .os_tag = Target.Os.Tag.freestanding,
-        .abi = Target.Abi.none,
-        .cpu_features_sub = sub_set,
-    };
+    // Standard target options allows the person running `zig build` to choose
+    // what target to build for. Here we do not override the defaults, which
+    // means any target is allowed, and the default is native. Other options
+    // for restricting supported target set are available.
+    const target = b.standardTargetOptions(.{});
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
     const exe = b.addExecutable("zig-riscv64", "src/main.zig");
+    exe.addAssemblyFile("src/syscall.S");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();
@@ -34,4 +25,10 @@ pub fn build(b: *std.build.Builder) void {
 
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
+
+    const exe_tests = b.addTest("src/main.zig");
+    exe_tests.setBuildMode(mode);
+
+    const test_step = b.step("test", "Run unit tests");
+    test_step.dependOn(&exe_tests.step);
 }
