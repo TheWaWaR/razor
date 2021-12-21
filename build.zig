@@ -11,7 +11,7 @@ pub fn build(b: *std.build.Builder) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
-    const exe = b.addExecutable("zig-riscv64", "src/main.zig");
+    const exe = b.addExecutable("zig-riscv64", "src/root.zig");
     exe.addAssemblyFile("src/syscall.S");
     exe.setTarget(target);
     exe.setBuildMode(mode);
@@ -26,7 +26,7 @@ pub fn build(b: *std.build.Builder) void {
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
 
-    const exe_tests = b.addTest("src/main.zig");
+    const exe_tests = b.addTest("src/root.zig");
     exe_tests.setBuildMode(mode);
 
     const test_step = b.step("test", "Run unit tests");
