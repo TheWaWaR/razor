@@ -1,5 +1,5 @@
 
-# Zig version of [`ckb-std`][ckb-std], help you write CKB contract with zig.
+# Zig version of [`capsule`][capsule], help you write CKB contract with zig.
 
 ## TODO
 * [x] Use ckb syscall
@@ -23,6 +23,7 @@
   - [`ckb-binary-pather`][ckb-binary-pather] integration
 * [ ] A tutorial to help user quick start
 
+[capsule]: https://github.com/nervosnetwork/capsule
 [ckb-std]: https://github.com/nervosnetwork/ckb-std
 [ckb-testtool]: https://github.com/nervosnetwork/ckb-tool/tree/master/testtool
 [ckb-debugger]: https://github.com/nervosnetwork/ckb-standalone-debugger
