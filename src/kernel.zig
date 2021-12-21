@@ -19,21 +19,21 @@ export fn _start() callconv(.Naked) noreturn {
     while (true) {}
 }
 
-// FIXME: is this symbol required?
-export fn eh_personality() void {}
-// FIXME: is this symbol required?
-export fn abort() noreturn {
-    const msg: [:0]const u8 = "abort";
-    syscalls.debug(msg);
-    syscalls.exit(-1);
+export fn kmain(c_argc: i32, c_argv: [*][*:0]u8) i8 {
+    return @call(.{ .modifier = .always_inline }, main.main, .{c_argc, c_argv});
 }
 
 pub fn panic(message: []const u8, _: ?*std.builtin.StackTrace) noreturn {
     syscalls.debug(message);
-    syscalls.exit(-2);
+    syscalls.exit(-1);
     while (true) {}
 }
 
-export fn kmain(c_argc: i32, c_argv: [*][*:0]u8) i8 {
-    return main.main(c_argc, c_argv);
+// FIXME: is this symbol required?
+export fn eh_personality() void {}
+// FIXME: is this symbol required?
+export fn abort() noreturn {
+    syscalls.debug("abort");
+    syscalls.exit(-2);
 }
+
