@@ -9,11 +9,17 @@ pub const global_allocator = fixed_allocator.allocator();
 
 export fn _start() callconv(.Naked) noreturn {
     asm volatile (
+        // Point `c_argc` to sp+0
         \\ lw a0, 0(sp)
+        // Point `c_argv` to sp+8
         \\ addi a1, sp, 8
+        // Ensure third function parameter can't be used.
         \\ li a2, 0
+        // Call the `main()` function
         \\ call kmain
+        // Prepare the syscall number (which is 93, means exit system)
         \\ li a7, 93
+        // Exit the system
         \\ ecall
     );
     while (true) {}
