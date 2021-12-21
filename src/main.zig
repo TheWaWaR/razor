@@ -14,7 +14,7 @@ pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
     }
     debug(format("i = {}", .{i}));
     if (i > 200) {
-        @panic("this is panic message");
+        @panic("this is panic message, `i` is too large");
     }
     return 0;
 }

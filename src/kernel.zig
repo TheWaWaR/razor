@@ -28,12 +28,3 @@ pub fn panic(message: []const u8, _: ?*std.builtin.StackTrace) noreturn {
     syscalls.exit(-1);
     while (true) {}
 }
-
-// FIXME: is this symbol required?
-export fn eh_personality() void {}
-// FIXME: is this symbol required?
-export fn abort() noreturn {
-    syscalls.debug("abort");
-    syscalls.exit(-2);
-}
-
