@@ -10,21 +10,32 @@ pub fn build(b: *std.build.Builder) void {
     // means any target is allowed, and the default is native. Other options
     // for restricting supported target set are available.
     // const target = b.standardTargetOptions(.{});
-    var cpu_features_set = Target.Cpu.Feature.Set.empty;
+    var cpu_features_add = Target.Cpu.Feature.Set.empty;
+    var cpu_features_sub = Target.Cpu.Feature.Set.empty;
     // support cpu features: [i, m, c, v]
     inline for (.{
         RiscvFeature.@"64bit",
-        RiscvFeature.m,
         RiscvFeature.c,
+        RiscvFeature.m,
+    }) |feature| {
+        cpu_features_add.addFeature(@enumToInt(feature));
+    }
+    inline for (.{
+        RiscvFeature.a,
+        RiscvFeature.d,
+        RiscvFeature.e,
+        RiscvFeature.f,
+        // NOTE: will be supported in future update of zig
+        RiscvFeature.experimental_b,
         RiscvFeature.experimental_v,
     }) |feature| {
-        cpu_features_set.addFeature(@enumToInt(feature));
+        cpu_features_sub.addFeature(@enumToInt(feature));
     }
     const target = std.zig.CrossTarget{
         .cpu_arch = .riscv64,
-        .cpu_model = .baseline,
         .os_tag = .freestanding,
-        .cpu_features_add = cpu_features_set,
+        .cpu_features_add = cpu_features_add,
+        .cpu_features_sub = cpu_features_sub,
         .abi = .none,
     };
 
