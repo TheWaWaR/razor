@@ -1,12 +1,32 @@
 const std = @import("std");
+
 const builtin = std.builtin;
+const Target = std.Target;
+const RiscvFeature = Target.riscv.Feature;
 
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
     // means any target is allowed, and the default is native. Other options
     // for restricting supported target set are available.
-    const target = b.standardTargetOptions(.{});
+    // const target = b.standardTargetOptions(.{});
+    var cpu_features_set = Target.Cpu.Feature.Set.empty;
+    // support cpu features: [i, m, c, v]
+    inline for (.{
+        RiscvFeature.@"64bit",
+        RiscvFeature.m,
+        RiscvFeature.c,
+        RiscvFeature.experimental_v,
+    }) |feature| {
+        cpu_features_set.addFeature(@enumToInt(feature));
+    }
+    const target = std.zig.CrossTarget{
+        .cpu_arch = .riscv64,
+        .cpu_model = .baseline,
+        .os_tag = .freestanding,
+        .cpu_features_add = cpu_features_set,
+        .abi = .none,
+    };
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.

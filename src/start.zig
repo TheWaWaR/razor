@@ -9,7 +9,7 @@ pub const global_allocator = fixed_allocator.allocator();
 
 export fn _start() callconv(.Naked) noreturn {
     asm volatile (
-        // Point `c_argc` to sp+0
+    // Point `c_argc` to sp+0
         \\ lw a0, 0(sp)
         // Point `c_argv` to sp+8
         \\ addi a1, sp, 8
@@ -26,7 +26,7 @@ export fn _start() callconv(.Naked) noreturn {
 }
 
 export fn kmain(c_argc: i32, c_argv: [*][*:0]u8) i8 {
-    return @call(.{ .modifier = .always_inline }, main.main, .{c_argc, c_argv});
+    return @call(.{ .modifier = .always_inline }, main.main, .{ c_argc, c_argv });
 }
 
 pub fn panic(message: []const u8, _: ?*std.builtin.StackTrace) noreturn {

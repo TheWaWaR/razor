@@ -1,4 +1,3 @@
-
 const std = @import("std");
 const global_allocator = @import("root").global_allocator;
 

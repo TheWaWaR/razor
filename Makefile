@@ -1,5 +1,5 @@
 build:
-	zig build -Dtarget=riscv64-freestanding
+	zig build
 	ls -rShl zig-out/bin/zig-riscv64
 	riscv64-unknown-elf-strip zig-out/bin/zig-riscv64
 	ls -rShl zig-out/bin/zig-riscv64
