@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = std.builtin;
 
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
@@ -9,7 +10,8 @@ pub fn build(b: *std.build.Builder) void {
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    const mode = b.standardReleaseOptions();
+    // const mode = b.standardReleaseOptions();
+    const mode = builtin.Mode.ReleaseSmall;
 
     const exe = b.addExecutable("zig-riscv64", "src/start.zig");
     exe.addAssemblyFile("src/syscall.S");
