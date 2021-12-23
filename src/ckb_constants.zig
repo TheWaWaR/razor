@@ -18,3 +18,30 @@ pub const SYS_LOAD_CELL_DATA: u64 = 2092;
 pub const SYS_DEBUG: u64 = 2177;
 
 pub const CKB_SUCCESS: u64 = 0;
+
+pub const Source = enum(u64) {
+    input = 1,
+    output = 2,
+    cell_dep = 3,
+    header_dep = 4,
+    group_input = 0x0100000000000001,
+    group_output = 0x0100000000000002,
+};
+pub const CellField = enum(u64) {
+    capacity = 0,
+    data_hash = 1,
+    lock = 2,
+    lock_hash = 3,
+    @"type" = 4,
+    type_hash = 5,
+    occupied_capacity = 6,
+};
+pub const HeaderField = enum(u64) {
+    epoch_number = 0,
+    epoch_start_block_number = 1,
+    epoch_length = 2,
+};
+pub const InputField = enum(u64) {
+    out_point = 0,
+    since = 1,
+};

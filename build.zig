@@ -25,7 +25,7 @@ pub fn build(b: *std.build.Builder) void {
         RiscvFeature.d,
         RiscvFeature.e,
         RiscvFeature.f,
-        // NOTE: will be supported in future update of zig
+        // TODO: will be supported in future update of zig
         RiscvFeature.experimental_b,
         RiscvFeature.experimental_v,
     }) |feature| {
@@ -41,8 +41,8 @@ pub fn build(b: *std.build.Builder) void {
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    // const mode = b.standardReleaseOptions();
-    const mode = builtin.Mode.ReleaseSmall;
+    const mode = b.standardReleaseOptions();
+    // const mode = builtin.Mode.ReleaseSmall;
 
     const exe = b.addExecutable("zig-riscv64", "src/start.zig");
     exe.addAssemblyFile("src/syscall.S");

@@ -1,5 +1,7 @@
+BUILD_MODE?=-Drelease-small=true
+
 build:
-	zig build
+	zig build ${BUILD_MODE}
 	ls -rShl zig-out/bin/zig-riscv64
 	riscv64-unknown-elf-strip zig-out/bin/zig-riscv64
 	ls -rShl zig-out/bin/zig-riscv64
