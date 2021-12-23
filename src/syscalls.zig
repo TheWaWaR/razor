@@ -41,10 +41,10 @@ fn syscallLoad(
     );
     return switch (ret) {
         0 => len,
-        1 => return error.IndexOutOfBound,
-        2 => return error.ItemMissing,
-        3 => return error.SliceOutOfBound,
-        4 => return error.WrongFormat,
+        1 => error.IndexOutOfBound,
+        2 => error.ItemMissing,
+        3 => error.SliceOutOfBound,
+        4 => error.WrongFormat,
         else => unreachable,
     };
 }

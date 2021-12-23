@@ -4,7 +4,7 @@
 ## TODO
 * [x] Use ckb syscall
 * [x] Use FixedBufferAllocator
-* [ ] Add all syscalls
+* [x] Add all syscalls
 * [ ] Add all helper function in [`ckb-std`][ckb-std]
   - high level syscall
   - simulator
