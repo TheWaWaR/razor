@@ -1,11 +1,11 @@
 const std = @import("std");
-const syscalls = @import("syscalls.zig");
+const ckb_std = @import("ckb_std");
 const main = @import("main.zig");
 
+const syscalls = ckb_std.syscalls;
+
 // FIXME: learn ckb-vm memory model, then decide the size even the allocator Type.
-var heap_buf: [512 * 1024]u8 = undefined;
-var fixed_allocator = std.heap.FixedBufferAllocator.init(&heap_buf);
-pub const global_allocator = fixed_allocator.allocator();
+pub const global_allocator = ckb_std.initFixedAllocator();
 
 export fn _start() callconv(.Naked) noreturn {
     asm volatile (

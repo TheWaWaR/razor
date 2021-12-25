@@ -45,7 +45,12 @@ pub fn build(b: *std.build.Builder) void {
     // const mode = builtin.Mode.ReleaseSmall;
 
     const exe = b.addExecutable("razor", "src/start.zig");
-    exe.addAssemblyFile("src/syscall.S");
+    // TODO: how to remove this line?
+    exe.addAssemblyFile("ckb-std/src/syscall.S");
+    exe.addPackage(.{
+        .name = "ckb_std",
+        .path = .{ .path = "ckb-std/src/ckb_std.zig" },
+    });
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();

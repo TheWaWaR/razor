@@ -1,7 +1,8 @@
 const std = @import("std");
 const builtin = @import("builtin");
+
 const global_allocator = @import("root").global_allocator;
-const syscalls = @import("syscalls.zig");
+const syscalls = @import("ckb_std").syscalls;
 
 pub fn format(comptime fmt: []const u8, args: anytype) []u8 {
     // FIXME: ensure the final byte of string is `\0`

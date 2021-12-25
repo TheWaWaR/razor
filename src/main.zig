@@ -1,5 +1,7 @@
-const syscalls = @import("syscalls.zig");
+const ckb_std = @import("ckb_std");
 const util = @import("util.zig");
+
+const syscalls = ckb_std.syscalls;
 
 const loadTxHash = syscalls.loadTxHash;
 const loadScriptHash = syscalls.loadScriptHash;
