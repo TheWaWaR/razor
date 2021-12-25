@@ -20,7 +20,7 @@ pub fn exit(code: i8) noreturn {
 }
 
 // Return the actual data length: `actual_len = data.len - min(data.len, offset)`.
-fn syscallLoad(
+fn sysLoad(
     buf: [*]u8,
     len: usize,
     offset: usize,
@@ -58,7 +58,7 @@ fn syscallLoad(
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
 pub fn loadTxHash(buf: []u8, offset: usize) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -78,7 +78,7 @@ pub fn loadTxHash(buf: []u8, offset: usize) SysError!usize {
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
 pub fn loadScriptHash(buf: []u8, offset: usize) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -100,7 +100,7 @@ pub fn loadScriptHash(buf: []u8, offset: usize) SysError!usize {
 /// * `index` - index of cell
 /// * `source` - source of cell
 pub fn loadCell(buf: []u8, offset: usize, index: usize, source: Source) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -122,7 +122,7 @@ pub fn loadCell(buf: []u8, offset: usize, index: usize, source: Source) SysError
 /// * `index` - index of cell
 /// * `source` - source of cell
 pub fn loadInput(buf: []u8, offset: usize, index: usize, source: Source) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -144,7 +144,7 @@ pub fn loadInput(buf: []u8, offset: usize, index: usize, source: Source) SysErro
 /// * `index` - index of cell or header
 /// * `source` - source
 pub fn loadHeader(buf: []u8, offset: usize, index: usize, source: Source) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -166,7 +166,7 @@ pub fn loadHeader(buf: []u8, offset: usize, index: usize, source: Source) SysErr
 /// * `index` - index of cell
 /// * `source` - source
 pub fn loadWitness(buf: []u8, offset: usize, index: usize, source: Source) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -186,7 +186,7 @@ pub fn loadWitness(buf: []u8, offset: usize, index: usize, source: Source) SysEr
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
 pub fn loadTransaction(buf: []u8, offset: usize) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -215,7 +215,7 @@ pub fn loadCellByField(
     source: Source,
     field: CellField,
 ) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -244,7 +244,7 @@ pub fn loadHeaderByField(
     source: Source,
     field: HeaderField,
 ) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -273,7 +273,7 @@ pub fn loadInputByField(
     source: Source,
     field: InputField,
 ) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -300,7 +300,7 @@ pub fn loadCellData(
     index: usize,
     source: Source,
 ) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -320,7 +320,7 @@ pub fn loadCellData(
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
 pub fn loadScript(buf: []u8, offset: usize) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf.ptr,
         buf.len,
         offset,
@@ -351,7 +351,7 @@ pub fn loadCellCode(
     index: usize,
     source: Source,
 ) SysError!usize {
-    return syscallLoad(
+    return sysLoad(
         buf,
         len,
         @intCast(u64, content_offset),
