@@ -44,7 +44,7 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
     // const mode = builtin.Mode.ReleaseSmall;
 
-    const exe = b.addExecutable("zig-riscv64", "src/start.zig");
+    const exe = b.addExecutable("razor", "src/start.zig");
     exe.addAssemblyFile("src/syscall.S");
     exe.setTarget(target);
     exe.setBuildMode(mode);

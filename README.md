@@ -1,5 +1,9 @@
 
-# Zig version of [`capsule`][capsule], help you write CKB contract with zig.
+# Razor 
+
+![Razor Dota2](./Razor.jpg)
+
+Razor is a [zig][zig] development framework for creating smart contract for Nervos' CKB layer 1 blockchain. Razor is designed to provide an out-of-the-box solution that helps Nervos developers accomplish common tasks quickly and painlessly.
 
 ## TODO
 * [x] Use ckb syscall
@@ -23,6 +27,7 @@
   - [`ckb-binary-pather`][ckb-binary-pather] integration
 * [ ] A tutorial to help user quick start
 
+[ziglang]: https://ziglang.org/
 [capsule]: https://github.com/nervosnetwork/capsule
 [ckb-std]: https://github.com/nervosnetwork/ckb-std
 [ckb-testtool]: https://github.com/nervosnetwork/ckb-tool/tree/master/testtool
