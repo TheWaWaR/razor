@@ -3,7 +3,7 @@
 
 ![Razor Dota2](./Razor.jpg)
 
-Razor is a [zig][zig] development framework for creating smart contract for Nervos' CKB layer 1 blockchain. Razor is designed to provide an out-of-the-box solution that helps Nervos developers accomplish common tasks quickly and painlessly.
+Razor is a development framework writing in [zig][ziglang] for creating smart contract for Nervos' CKB layer 1 blockchain. Razor is designed to provide an out-of-the-box solution that helps Nervos developers accomplish common tasks quickly and painlessly.
 
 ## TODO
 * [x] Use ckb syscall
