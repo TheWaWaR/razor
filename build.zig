@@ -64,7 +64,17 @@ pub fn build(b: *std.build.Builder) void {
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
 
-    const exe_tests = b.addTest("src/start.zig");
+    const exe_tests = b.addTest("src/util.zig");
+    exe_tests.addAssemblyFile("ckb-std/src/syscall.S");
+    exe.addPackage(.{
+        .name = "ckb_std",
+        .path = .{ .path = "ckb-std/src/ckb_std.zig" },
+    });
+    exe_tests.setTarget(std.zig.CrossTarget{
+        .cpu_arch = .riscv64,
+        .os_tag = .linux,
+        .abi = .gnu,
+    });
     exe_tests.setBuildMode(mode);
 
     const test_step = b.step("test", "Run unit tests");

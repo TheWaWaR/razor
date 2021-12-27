@@ -415,6 +415,12 @@ pub fn exec(
         @intCast(u64, bounds),
         argc,
         @ptrToInt(argv.ptr),
+        0,
         consts.SYS_EXEC,
     );
+}
+
+const std = @import("std");
+test "check all syscalls decls" {
+    std.testing.refAllDecls(@This());
 }

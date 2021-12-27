@@ -10,3 +10,7 @@ var fixed_allocator = std.heap.FixedBufferAllocator.init(&heap_buf);
 pub fn initFixedAllocator() std.mem.Allocator {
     return fixed_allocator.allocator();
 }
+
+test "check all decls" {
+    std.testing.refAllDecls(@This());
+}

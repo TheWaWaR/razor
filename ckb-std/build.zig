@@ -44,6 +44,12 @@ pub fn build(b: *std.build.Builder) void {
     lib.install();
 
     const lib_tests = b.addTest("src/ckb_std.zig");
+    lib_tests.addAssemblyFile("src/syscall.S");
+    lib_tests.setTarget(std.zig.CrossTarget{
+        .cpu_arch = .riscv64,
+        .os_tag = .linux,
+        .abi = .gnu,
+    });
     lib_tests.setBuildMode(mode);
 
     const test_step = b.step("test", "Run library tests");
