@@ -4,3 +4,6 @@
 [submodule "deps/ckb-c-stdlib"]
 	path = deps/ckb-c-stdlib
 	url = https://github.com/nervosnetwork/ckb-c-stdlib
+[submodule "deps/ckb-production-scripts"]
+	path = deps/ckb-production-scripts
+	url = https://github.com/nervosnetwork/ckb-production-scripts
