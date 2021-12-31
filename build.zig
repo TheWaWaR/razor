@@ -66,7 +66,7 @@ pub fn build(b: *std.build.Builder) void {
 
     const exe_tests = b.addTest("src/util.zig");
     exe_tests.addAssemblyFile("ckb-std/src/syscall.S");
-    exe.addPackage(.{
+    exe_tests.addPackage(.{
         .name = "ckb_std",
         .path = .{ .path = "ckb-std/src/ckb_std.zig" },
     });

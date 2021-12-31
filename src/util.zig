@@ -22,7 +22,3 @@ pub fn debug(comptime fmt: []const u8, args: anytype) void {
         },
     }
 }
-
-test "check all decls: util" {
-    std.testing.refAllDecls(@This());
-}

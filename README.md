@@ -19,7 +19,7 @@ Razor is a development framework writing in [zig][ziglang] for creating smart co
 * [ ] An example to wrap a relatively complex C library
   - secp256k1
 * [ ] Port [anyone can pay][anyone-can-pay] type script
-* [ ] Add test library ([`ckb-testtool`][ckb-testtool])
+* [x] Add test library ([`ckb-testtool`][ckb-testtool])
 * [ ] Add Command line tool to manage the project
   - create project
   - deploy binary (with migration support)
