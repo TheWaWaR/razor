@@ -25,6 +25,10 @@ Razor is a development framework writing in [zig][ziglang] for creating smart co
   - deploy binary (with migration support)
   - [`ckb-debugger`][ckb-debugger] integration
   - [`ckb-binary-pather`][ckb-binary-pather] integration
+* [ ] Fuzz testing
+* [ ] Code coverage
+* [ ] Profile with ckb-debugger
+* [ ] Debug with ckb-debugger and gdb
 * [ ] A tutorial to help user quick start
 
 [ziglang]: https://ziglang.org/
