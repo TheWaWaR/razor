@@ -26,7 +26,7 @@ Razor is a development framework writing in [zig][ziglang] for creating smart co
   - [`ckb-debugger`][ckb-debugger] integration
   - [`ckb-binary-pather`][ckb-binary-pather] integration
 * [ ] Fuzz testing
-* [ ] Code coverage
+* [ ] Code coverage use [kcov][zig-kcov]
 * [ ] Profile with ckb-debugger
 * [ ] Debug with ckb-debugger and gdb
 * [ ] A tutorial to help user quick start
@@ -38,3 +38,4 @@ Razor is a development framework writing in [zig][ziglang] for creating smart co
 [ckb-debugger]: https://github.com/nervosnetwork/ckb-standalone-debugger
 [ckb-binary-pather]: https://github.com/nervosnetwork/ckb-binary-patcher
 [anyone-can-pay]: https://github.com/nervosnetwork/ckb-production-scripts/blob/6638022cb4768911d41d4bc3fc5a5e2a29b38476/c/anyone_can_pay.c
+[zig-kcov]: https://zig.news/squeek502/code-coverage-for-zig-1dk1
