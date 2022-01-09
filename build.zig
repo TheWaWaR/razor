@@ -44,7 +44,7 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
     // const mode = builtin.Mode.ReleaseSmall;
 
-    const exe = b.addExecutable("razor", "src/start.zig");
+    const exe = b.addExecutable("razor", "src/_start.zig");
     // TODO: how to remove this line?
     exe.addAssemblyFile("ckb-std/src/syscall.S");
     exe.addPackage(.{
