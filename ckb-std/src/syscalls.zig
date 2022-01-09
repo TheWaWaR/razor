@@ -1,9 +1,15 @@
 const consts = @import("ckb_constants.zig");
 const SysError = @import("error.zig").SysError;
+const std = @import("std");
+
+const assert = std.debug.assert;
+const mem = std.mem;
 const Source = consts.Source;
 const CellField = consts.CellField;
 const HeaderField = consts.HeaderField;
 const InputField = consts.InputField;
+
+const BUF_SIZE: usize = 1024;
 
 extern fn syscall(a0: u64, a1: u64, a2: u64, a3: u64, a4: u64, a5: u64, _: u64, a7: u64) u64;
 
@@ -57,7 +63,7 @@ fn sysLoad(
 ///
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
-pub fn loadTxHash(buf: []u8, offset: usize) SysError!usize {
+pub fn loadTxHashRaw(buf: []u8, offset: usize) SysError!usize {
     return sysLoad(
         buf.ptr,
         buf.len,
@@ -68,6 +74,12 @@ pub fn loadTxHash(buf: []u8, offset: usize) SysError!usize {
         consts.SYS_LOAD_TX_HASH,
     );
 }
+pub fn loadTxHash() SysError![32]u8 {
+    var hash_buf: [32]u8 = undefined;
+    const size = try loadTxHashRaw(&hash_buf, 0);
+    assert(size == 32);
+    return hash_buf;
+}
 
 /// Load script hash
 ///
@@ -77,7 +89,7 @@ pub fn loadTxHash(buf: []u8, offset: usize) SysError!usize {
 ///
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
-pub fn loadScriptHash(buf: []u8, offset: usize) SysError!usize {
+pub fn loadScriptHashRaw(buf: []u8, offset: usize) SysError!usize {
     return sysLoad(
         buf.ptr,
         buf.len,
@@ -87,6 +99,12 @@ pub fn loadScriptHash(buf: []u8, offset: usize) SysError!usize {
         0,
         consts.SYS_LOAD_SCRIPT_HASH,
     );
+}
+pub fn loadScriptHash() SysError![32]u8 {
+    var hash_buf: [32]u8 = undefined;
+    const size = try loadScriptHashRaw(&hash_buf, 0);
+    assert(size == 32);
+    return hash_buf;
 }
 
 /// Load cell
@@ -319,7 +337,7 @@ pub fn loadCellData(
 ///
 /// * `buf` - a writable buf used to receive the data
 /// * `offset` - offset
-pub fn loadScript(buf: []u8, offset: usize) SysError!usize {
+pub fn loadScriptRaw(buf: []u8, offset: usize) SysError!usize {
     return sysLoad(
         buf.ptr,
         buf.len,
@@ -329,6 +347,17 @@ pub fn loadScript(buf: []u8, offset: usize) SysError!usize {
         0,
         consts.SYS_LOAD_SCRIPT,
     );
+}
+pub fn loadScript(allocator: mem.Allocator) anyerror![]u8 {
+    var script_buf: [BUF_SIZE]u8 = undefined;
+    const size = try loadScriptRaw(script_buf[0..BUF_SIZE], 0);
+    var result_buf: []u8 = try allocator.alloc(u8, size);
+    mem.copy(u8, result_buf, script_buf[0..@minimum(BUF_SIZE, size)]);
+    if (size > BUF_SIZE) {
+        const new_size = try loadScriptRaw(result_buf[BUF_SIZE..size], BUF_SIZE);
+        assert(new_size + BUF_SIZE == size);
+    }
+    return result_buf;
 }
 
 /// Load cell code, read cell data as executable code
@@ -420,7 +449,6 @@ pub fn exec(
     );
 }
 
-const std = @import("std");
 test "check all syscalls decls" {
     std.testing.refAllDecls(@This());
 }
