@@ -55,6 +55,18 @@ fn sysLoad(
     };
 }
 
+fn loadData(loader: fn (buf: []u8, offset: usize) SysError!usize, allocator: mem.Allocator) SysError![]u8 {
+    var script_buf: [BUF_SIZE]u8 = undefined;
+    const size = try loader(script_buf[0..BUF_SIZE], 0);
+    var result_buf: []u8 = try allocator.alloc(u8, size);
+    mem.copy(u8, result_buf, script_buf[0..@minimum(BUF_SIZE, size)]);
+    if (size > BUF_SIZE) {
+        const new_size = try loader(result_buf[BUF_SIZE..size], BUF_SIZE);
+        assert(new_size + BUF_SIZE == size);
+    }
+    return result_buf;
+}
+
 /// Load transaction hash
 ///
 /// Return the actual data length or a syscall error
@@ -349,15 +361,7 @@ pub fn loadScriptRaw(buf: []u8, offset: usize) SysError!usize {
     );
 }
 pub fn loadScript(allocator: mem.Allocator) SysError![]u8 {
-    var script_buf: [BUF_SIZE]u8 = undefined;
-    const size = try loadScriptRaw(script_buf[0..BUF_SIZE], 0);
-    var result_buf: []u8 = try allocator.alloc(u8, size);
-    mem.copy(u8, result_buf, script_buf[0..@minimum(BUF_SIZE, size)]);
-    if (size > BUF_SIZE) {
-        const new_size = try loadScriptRaw(result_buf[BUF_SIZE..size], BUF_SIZE);
-        assert(new_size + BUF_SIZE == size);
-    }
-    return result_buf;
+    return loadData(loadScriptRaw, allocator);
 }
 
 /// Load cell code, read cell data as executable code
