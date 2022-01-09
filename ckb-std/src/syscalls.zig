@@ -348,7 +348,7 @@ pub fn loadScriptRaw(buf: []u8, offset: usize) SysError!usize {
         consts.SYS_LOAD_SCRIPT,
     );
 }
-pub fn loadScript(allocator: mem.Allocator) anyerror![]u8 {
+pub fn loadScript(allocator: mem.Allocator) SysError![]u8 {
     var script_buf: [BUF_SIZE]u8 = undefined;
     const size = try loadScriptRaw(script_buf[0..BUF_SIZE], 0);
     var result_buf: []u8 = try allocator.alloc(u8, size);

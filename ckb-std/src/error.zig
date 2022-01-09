@@ -1,3 +1,5 @@
+const std = @import("std");
+
 pub const SysError = error{
     /// Index out of bound
     IndexOutOfBound,
@@ -7,4 +9,4 @@ pub const SysError = error{
     SliceOutOfBound,
     /// Data encoding error
     WrongFormat,
-};
+} || std.mem.Allocator.Error;
