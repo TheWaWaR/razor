@@ -3,6 +3,7 @@ const std = @import("std");
 pub const ckb_constants = @import("ckb_constants.zig");
 pub const SysError = @import("error.zig").SysError;
 pub const syscalls = @import("syscalls.zig");
+pub const syscalls_wrap = @import("syscalls_wrap.zig");
 pub const util = @import("util.zig");
 
 // FIXME: learn ckb-vm memory model, then decide the size even the allocator Type.
