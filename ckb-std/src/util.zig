@@ -4,20 +4,21 @@ const syscalls = @import("syscalls.zig");
 
 const mem = std.mem;
 
-pub fn format(comptime fmt: []const u8, args: anytype, allocator: mem.Allocator) []u8 {
-    // FIXME: ensure the final byte of string is `\0`
+pub fn format(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype) []u8 {
     return std.fmt.allocPrint(allocator, fmt, args) catch @panic("allocPrint error");
 }
 
-pub fn print(comptime fmt: []const u8, args: anytype, allocator: mem.Allocator) void {
-    const content = format(fmt, args, allocator);
+pub fn print(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype) void {
+    const raw_content = format(allocator, fmt, args);
+    const content = std.cstr.addNullByte(allocator, raw_content) catch @panic("addNullByte error");
+    defer allocator.free(raw_content);
     defer allocator.free(content);
     syscalls.debug(content);
 }
 
-pub fn debug(comptime fmt: []const u8, args: anytype, allocator: mem.Allocator) void {
+pub fn debug(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype) void {
     switch (builtin.mode) {
-        .Debug => print(fmt, args, allocator),
+        .Debug => print(allocator, fmt, args),
         else => {
             _ = fmt;
             _ = args;

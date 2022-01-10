@@ -5,30 +5,63 @@ const syscalls = ckb_std.syscalls_wrap;
 const util = ckb_std.util;
 const consts = ckb_std.ckb_constants;
 
-const loadTxHash = syscalls.loadTxHash;
-const loadScriptHash = syscalls.loadScriptHash;
-const loadScript = syscalls.loadScript;
-const loadCell = syscalls.loadCell;
 const debug = util.debug;
 const print = util.print;
 const Source = consts.Source;
 
 pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
-    debug("c_argc: {}, c_argv: {*}", .{ c_argc, c_argv }, allocator);
+    debug(allocator, "c_argc: {}, c_argv: {*}", .{ c_argc, c_argv });
 
-    var tx_hash = loadTxHash() catch unreachable;
-    print("loadTxHash, data: {any}", .{tx_hash}, allocator);
+    var tx_hash = syscalls.loadTxHash() catch unreachable;
+    print(allocator, "loadTxHash() => data: {any}", .{tx_hash});
 
-    const script_hash = loadScriptHash() catch unreachable;
-    print("loadScriptHash, data: {any}", .{script_hash}, allocator);
+    const script_hash = syscalls.loadScriptHash() catch unreachable;
+    print(allocator, "loadScriptHash() => data: {any}", .{script_hash});
 
-    const script_buf = loadScript(allocator) catch unreachable;
+    const script_buf = syscalls.loadScript(allocator) catch unreachable;
     defer allocator.free(script_buf);
-    print("loadScript, data: {any}", .{script_buf}, allocator);
+    print(allocator, "loadScript() => length: {}, data: {any}", .{ script_buf.len, script_buf });
 
-    const cell_buf = loadCell(allocator, 0, Source.input) catch unreachable;
+    const cell_buf = syscalls.loadCell(allocator, 0, Source.input) catch unreachable;
     defer allocator.free(cell_buf);
-    print("loadCell, data: {any}", .{cell_buf}, allocator);
+    print(allocator, "loadCell(0, input) => length: {}, data: {any}", .{ cell_buf.len, cell_buf });
 
+    const input_buf = syscalls.loadInput(allocator, 0, Source.input) catch unreachable;
+    defer allocator.free(input_buf);
+    print(allocator, "loadInput(0, input) => length: {}, data: {any}", .{ input_buf.len, input_buf });
+
+    const header_buf = syscalls.loadHeader(allocator, 0, Source.header_dep) catch unreachable;
+    defer allocator.free(header_buf);
+    print(allocator, "loadHeader(0, header_dep) => length: {}, data: {any}", .{ header_buf.len, header_buf });
+
+    const witness_buf = syscalls.loadWitness(allocator, 0, Source.input) catch unreachable;
+    defer allocator.free(witness_buf);
+    print(allocator, "loadWitness(0, input) => length: {}, data: {any}", .{ witness_buf.len, witness_buf });
+
+    const cell_capacity = syscalls.loadCellCapacity(0, Source.input) catch unreachable;
+    print(allocator, "loadCellCapacity(0, input) => capacity: {}", .{cell_capacity});
+    const cell_occupied_capacity = syscalls.loadCellOccupiedCapacity(0, Source.input) catch unreachable;
+    print(allocator, "loadCellOccupiedCapacity(0, input) => occupied capacity: {}", .{cell_occupied_capacity});
+
+    const data_hash = syscalls.loadCellDataHash(0, Source.input) catch unreachable;
+    print(allocator, "loadCellDataHash(0, input) => data: {any}", .{data_hash});
+    const lock_hash = syscalls.loadCellLockHash(0, Source.input) catch unreachable;
+    print(allocator, "loadCellLockHash(0, input) => lock: {any}", .{lock_hash});
+    const type_hash = syscalls.loadCellTypeHash(0, Source.input) catch unreachable;
+    print(allocator, "loadCellTypeHash(0, input) => type: {any}", .{type_hash});
+
+    const lock_buf = syscalls.loadCellLock(allocator, 0, Source.input) catch unreachable;
+    defer allocator.free(lock_buf);
+    print(allocator, "loadCellLock(0, input) => length: {}, data: {any}", .{ lock_buf.len, lock_buf });
+    const type_buf = syscalls.loadCellType(allocator, 0, Source.input) catch unreachable;
+    if (type_buf) |buf| {
+        defer allocator.free(buf);
+        print(allocator, "loadCellType(0, input) => length: {}, data: {any}", .{ buf.len, buf });
+    } else {
+        print(allocator, "loadCellType(0, input) => null", .{});
+    }
+
+    const epoch_number = syscalls.loadHeaderEpochNumber(0, Source.input) catch unreachable;
+    print(allocator, "loadHeaderEpochNumber(0, input) => epoch number: {}", .{epoch_number});
     return 0;
 }
