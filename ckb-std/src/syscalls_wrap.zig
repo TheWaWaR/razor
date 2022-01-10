@@ -52,26 +52,12 @@ const Loader = union(enum) {
     }
 };
 
-fn sourceLoaderFn(
-    comptime func: fn ([]u8, usize, usize, Source) SysError!usize,
-) fn (mem.Allocator, usize, Source) SysError![]u8 {
-    return struct {
-        fn impl(allocator: mem.Allocator, index: usize, source: Source) SysError![]u8 {
-            return loadData(
-                .{ .index = index, .source = source },
-                Loader{ .by_source = func },
-                allocator,
-            );
-        }
-    }.impl;
-}
-
 fn loadU64Field(
-    comptime loader: fn ([]u8, usize, usize, Source, CellField) SysError!usize,
+    comptime field: anytype,
+    comptime field_loader: fn ([]u8, usize, usize, Source, @TypeOf(field)) SysError!usize,
     offset: usize,
     index: usize,
     source: Source,
-    field: CellField,
 ) SysError!u64 {
     var buf: [8]u8 align(@alignOf(u64)) = undefined;
     const size = try loader(&buf, offset, index, source, field);
@@ -129,10 +115,10 @@ pub fn loadWitness(allocator: mem.Allocator, index: usize, source: Source) SysEr
 }
 
 pub fn loadCellCapacity(index: usize, source: Source) SysError!u64 {
-    return loadU64Field(syscalls.loadCellByField, 0, index, source, CellField.capacity);
+    return loadU64Field(CellField.capacity, syscalls.loadCellByField, 0, index, source);
 }
 pub fn loadCellOccupiedCapacity(index: usize, source: Source) SysError!u64 {
-    return loadU64Field(syscalls.loadCellByField, 0, index, source, CellField.occupied_capacity);
+    return loadU64Field(CellField.occupied_capacity, syscalls.loadCellByField, 0, index, source);
 }
 
 pub fn loadCellDataHash(index: usize, source: Source) SysError![32]u8 {
@@ -189,8 +175,5 @@ pub fn loadCellType(allocator: mem.Allocator, index: usize, source: Source) SysE
 }
 
 pub fn loadHeaderEpochNumber(index: usize, source: Source) SysError!u64 {
-    var buf: [8]u8 align(@alignOf(u64)) = undefined;
-    const size = try syscalls.loadHeaderByField(&buf, 0, index, source, HeaderField.epoch_number);
-    assert(size == 8);
-    return mem.bytesAsSlice(u64, &buf)[0];
+    return loadU64Field(HeaderField.epoch_number, syscalls.loadHeaderByField, 0, index, source);
 }
