@@ -10,11 +10,11 @@ Razor is a development framework writing in [zig][ziglang] for creating smart co
 * [x] Use FixedBufferAllocator
 * [x] Add all syscalls
 * [ ] Add all helper function in [`ckb-std`][ckb-std]
-  - high level syscall
-  - simulator
-  - common data types (ckb-types/since/...)
-  - error types
-  - dynamic loading
+  - [x] high level syscall
+  - [x] error types
+  - [ ] common data types (ckb-types/since/...)
+  - [ ] simulator
+  - [ ] dynamic loading
 * [ ] Choose a better allocator and a heap size
 * [ ] An example to wrap a relatively complex C library
   - secp256k1
