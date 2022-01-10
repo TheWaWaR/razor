@@ -3,11 +3,13 @@ const allocator = @import("root").global_allocator;
 
 const syscalls = ckb_std.syscalls_wrap;
 const util = ckb_std.util;
+const types = ckb_std.types;
 const consts = ckb_std.ckb_constants;
 
 const debug = util.debug;
 const print = util.print;
 const Source = consts.Source;
+const ScriptHashType = types.ScriptHashType;
 
 pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
     debug(allocator, "c_argc: {}, c_argv: {*}", .{ c_argc, c_argv });
@@ -76,5 +78,15 @@ pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
     print(allocator, "loadInputSince(0, input) => since: {}", .{since});
     const out_point_buf = syscalls.loadInputOutPoint(0, Source.input) catch unreachable;
     print(allocator, "loadInputOutPoint(0, input) => data: {any}", .{out_point_buf});
+
+    const index_opt = syscalls.findCellByDataHash(data_hash[0..], Source.input) catch unreachable;
+    print(allocator, "findCellByDataHash(data_hash, input) => index: {any}", .{index_opt});
+
+    const index_opt2 = syscalls.lookForDepWithDataHash(data_hash[0..]);
+    print(allocator, "lookForDepWithDataHash(data_hash) => index: {any}", .{index_opt2});
+
+    const argv = &[_][:0]const u8{ "a", "bcd" };
+    const exec_result = syscalls.exec_cell(data_hash[0..], ScriptHashType.data, 0, 0, argv[0..]);
+    print(allocator, "exec_cell(data_hash, data, 0, 0, argv) => result: {any}", .{exec_result});
     return 0;
 }

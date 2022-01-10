@@ -407,15 +407,15 @@ pub fn exec(
     index: usize,
     source: Source,
     place: usize,
-    bounds: usize,
-    argv: [][*:0]u8,
+    bounds: u64,
+    argv: []const [:0]const u8,
 ) u64 {
     const argc: u64 = argv.len;
     return syscall(
         @intCast(u64, index),
         @enumToInt(source),
         @intCast(u64, place),
-        @intCast(u64, bounds),
+        bounds,
         argc,
         @ptrToInt(argv.ptr),
         0,
