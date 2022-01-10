@@ -60,8 +60,8 @@ fn loadU64Field(
     source: Source,
 ) SysError!u64 {
     var buf: [8]u8 align(@alignOf(u64)) = undefined;
-    const size = try loader(&buf, offset, index, source, field);
-    assert(size == 8);
+    const size = try field_loader(&buf, offset, index, source, field);
+    assert(size == buf.len);
     return mem.bytesAsSlice(u64, &buf)[0];
 }
 
@@ -110,6 +110,13 @@ pub fn loadWitness(allocator: mem.Allocator, index: usize, source: Source) SysEr
     return loadData(
         .{ .index = index, .source = source },
         Loader{ .by_source = syscalls.loadWitness },
+        allocator,
+    );
+}
+pub fn loadCellData(allocator: mem.Allocator, index: usize, source: Source) SysError![]u8 {
+    return loadData(
+        .{ .index = index, .source = source },
+        Loader{ .by_source = syscalls.loadCellData },
         allocator,
     );
 }
@@ -176,4 +183,24 @@ pub fn loadCellType(allocator: mem.Allocator, index: usize, source: Source) SysE
 
 pub fn loadHeaderEpochNumber(index: usize, source: Source) SysError!u64 {
     return loadU64Field(HeaderField.epoch_number, syscalls.loadHeaderByField, 0, index, source);
+}
+pub fn loadHeaderEpochStartBlockNumber(index: usize, source: Source) SysError!u64 {
+    return loadU64Field(HeaderField.epoch_start_block_number, syscalls.loadHeaderByField, 0, index, source);
+}
+pub fn loadHeaderEpochLength(index: usize, source: Source) SysError!u64 {
+    return loadU64Field(HeaderField.epoch_length, syscalls.loadHeaderByField, 0, index, source);
+}
+
+pub fn loadInputSince(index: usize, source: Source) SysError!u64 {
+    return loadU64Field(InputField.since, syscalls.loadInputByField, 0, index, source);
+}
+pub fn loadInputOutPoint(index: usize, source: Source) SysError![36]u8 {
+    var buf: [36]u8 = undefined;
+    const size = try syscalls.loadInputByField(&buf, 0, index, source, InputField.out_point);
+    assert(size == buf.len);
+    return buf;
+}
+
+test "check all decls syscalls_wrap" {
+    std.testing.refAllDecls(@This());
 }

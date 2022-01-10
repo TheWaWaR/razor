@@ -38,6 +38,10 @@ pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
     defer allocator.free(witness_buf);
     print(allocator, "loadWitness(0, input) => length: {}, data: {any}", .{ witness_buf.len, witness_buf });
 
+    const cell_data_buf = syscalls.loadCellData(allocator, 0, Source.input) catch unreachable;
+    defer allocator.free(cell_data_buf);
+    print(allocator, "loadCellData(0, input) => length: {}, data: {any}", .{ cell_data_buf.len, cell_data_buf });
+
     const cell_capacity = syscalls.loadCellCapacity(0, Source.input) catch unreachable;
     print(allocator, "loadCellCapacity(0, input) => capacity: {}", .{cell_capacity});
     const cell_occupied_capacity = syscalls.loadCellOccupiedCapacity(0, Source.input) catch unreachable;
@@ -63,5 +67,14 @@ pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
 
     const epoch_number = syscalls.loadHeaderEpochNumber(0, Source.input) catch unreachable;
     print(allocator, "loadHeaderEpochNumber(0, input) => epoch number: {}", .{epoch_number});
+    const epoch_start_block_number = syscalls.loadHeaderEpochStartBlockNumber(0, Source.input) catch unreachable;
+    print(allocator, "loadHeaderEpochStartBlockNumber(0, input) => epoch start block number: {}", .{epoch_start_block_number});
+    const epoch_length = syscalls.loadHeaderEpochLength(0, Source.input) catch unreachable;
+    print(allocator, "loadHeaderEpochLength(0, input) => epoch length: {}", .{epoch_length});
+
+    const since = syscalls.loadInputSince(0, Source.input) catch unreachable;
+    print(allocator, "loadInputSince(0, input) => since: {}", .{since});
+    const out_point_buf = syscalls.loadInputOutPoint(0, Source.input) catch unreachable;
+    print(allocator, "loadInputOutPoint(0, input) => data: {any}", .{out_point_buf});
     return 0;
 }
