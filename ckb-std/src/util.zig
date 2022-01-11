@@ -10,10 +10,18 @@ pub fn format(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype)
 
 pub fn print(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype) void {
     const raw_content = format(allocator, fmt, args);
-    const content = std.cstr.addNullByte(allocator, raw_content) catch @panic("addNullByte error");
-    defer allocator.free(raw_content);
-    defer allocator.free(content);
-    syscalls.debug(content);
+    // Optimized version of `std.cstr.addNullByte()`;
+    const new_content = if (allocator.resize(raw_content, raw_content.len + 1)) |new_content| blk: {
+        break :blk new_content;
+    } else blk: {
+        var new_content = allocator.alloc(u8, raw_content.len + 1) catch @panic("alloc error");
+        mem.copy(u8, new_content, raw_content);
+        allocator.free(raw_content);
+        break :blk new_content;
+    };
+    defer allocator.free(new_content);
+    new_content[raw_content.len] = 0;
+    syscalls.debug(new_content);
 }
 
 pub fn debug(allocator: mem.Allocator, comptime fmt: []const u8, args: anytype) void {
