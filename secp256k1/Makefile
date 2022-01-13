@@ -2,7 +2,7 @@ TARGET := riscv64-linux-musl
 CC := zig cc --target=$(TARGET)
 LD := zig cc --target=$(TARGET)
 
-ZIG_DIR := $(shell dirname $(shell readlink -f $(shell which zig)))
+ZIG_DIR := $(shell dirname $(shell readlink $(shell which zig)))
 SECP256K1_INCLUDES := -I build -I ../deps/ckb-production-scripts/c -I ../deps/ckb-c-stdlib -I ../deps/secp256k1/src -I ../deps/secp256k1 \
 		-I $(ZIG_DIR)/lib/libc/include/generic-musl \
 		-I $(ZIG_DIR)/lib/libc/include/riscv64-linux-musl
