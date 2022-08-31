@@ -12,7 +12,7 @@ const HeaderField = consts.HeaderField;
 const InputField = consts.InputField;
 const ScriptHashType = types.ScriptHashType;
 
-const BUF_SIZE: usize = 1024;
+const BUF_SIZE: usize = 256;
 
 // Load dynamically sized data
 fn loadData(
@@ -20,15 +20,14 @@ fn loadData(
     comptime loader: Loader,
     allocator: mem.Allocator,
 ) SysError![]u8 {
-    var script_buf: [BUF_SIZE]u8 = undefined;
-    const size = try loader.call(context, &script_buf, 0);
-    var result_buf: []u8 = try allocator.alloc(u8, size);
-    mem.copy(u8, result_buf, script_buf[0..@minimum(BUF_SIZE, size)]);
+    var result_buf: []u8 = try allocator.alloc(u8, BUF_SIZE);
+    const size = try loader.call(context, result_buf, 0);
     if (size > BUF_SIZE) {
+        result_buf = try allocator.realloc(result_buf, size);
         const new_size = try loader.call(context, result_buf[BUF_SIZE..size], BUF_SIZE);
         assert(new_size + BUF_SIZE == size);
     }
-    return result_buf;
+    return result_buf[0..size];
 }
 
 const Loader = union(enum) {

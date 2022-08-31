@@ -32,9 +32,12 @@ pub fn main(c_argc: i32, c_argv: [*][*:0]u8) i8 {
     defer allocator.free(input_buf);
     print(allocator, "loadInput(0, input) => length: {}, data: {any}", .{ input_buf.len, input_buf });
 
-    const header_buf = syscalls.loadHeader(allocator, 0, Source.header_dep) catch unreachable;
-    defer allocator.free(header_buf);
-    print(allocator, "loadHeader(0, header_dep) => length: {}, data: {any}", .{ header_buf.len, header_buf });
+    if (syscalls.loadHeader(allocator, 0, Source.header_dep)) |header_buf| {
+        defer allocator.free(header_buf);
+        print(allocator, "loadHeader(0, header_dep) => length: {}, data: {any}", .{ header_buf.len, header_buf });
+    } else |err| {
+        print(allocator, "loadHeader(0, header_buf) => error: {any}", .{err});
+    }
 
     const witness_buf = syscalls.loadWitness(allocator, 0, Source.input) catch unreachable;
     defer allocator.free(witness_buf);

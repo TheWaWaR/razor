@@ -32,9 +32,11 @@ fn sysLoad(
     a5: u64,
     syscall_number: u64,
 ) SysError!usize {
+    // NOTE: this line is necessary, otherwise len will not be changed
+    var actual_len = len;
     const ret = syscall(
         @ptrToInt(buf),
-        @ptrToInt(&len),
+        @ptrToInt(&actual_len),
         @intCast(u64, offset),
         a3,
         a4,
@@ -43,7 +45,7 @@ fn sysLoad(
         syscall_number,
     );
     return switch (ret) {
-        0 => len,
+        0 => actual_len,
         1 => error.IndexOutOfBound,
         2 => error.ItemMissing,
         3 => error.SliceOutOfBound,

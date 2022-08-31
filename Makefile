@@ -11,6 +11,9 @@ zig-out/bin/razor: src/main.zig src/_start.zig
 run: zig-out/bin/razor
 	RUST_LOG=debug ckb-debugger --max-cycles 1000000000 --bin zig-out/bin/razor
 
+test: zig-out/bin/razor
+	cargo test --manifest-path rust-tests/Cargo.toml
+
 clean:
 	rm -rf zig-cache/ zig-out/
 
