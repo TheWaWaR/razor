@@ -15,8 +15,10 @@ pub fn build(b: *std.build.Builder) void {
     // support cpu features: [i, m, c, v]
     inline for (.{
         RiscvFeature.@"64bit",
-        RiscvFeature.c,
         RiscvFeature.m,
+        RiscvFeature.c,
+        // TODO add more b extension configs
+        RiscvFeature.zbb,
     }) |feature| {
         cpu_features_add.addFeature(@enumToInt(feature));
     }
@@ -25,9 +27,7 @@ pub fn build(b: *std.build.Builder) void {
         RiscvFeature.d,
         RiscvFeature.e,
         RiscvFeature.f,
-        // TODO: will be supported in future update of zig
-        RiscvFeature.experimental_b,
-        RiscvFeature.experimental_v,
+        RiscvFeature.v,
     }) |feature| {
         cpu_features_sub.addFeature(@enumToInt(feature));
     }
@@ -47,10 +47,7 @@ pub fn build(b: *std.build.Builder) void {
     const exe = b.addExecutable("razor", "src/_start.zig");
     // TODO: how to remove this line?
     exe.addAssemblyFile("ckb-std/src/syscall.S");
-    exe.addPackage(.{
-        .name = "ckb_std",
-        .path = .{ .path = "ckb-std/src/ckb_std.zig" },
-    });
+    exe.addPackagePath("ckb_std", "ckb-std/src/ckb_std.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();
@@ -66,10 +63,7 @@ pub fn build(b: *std.build.Builder) void {
 
     const exe_tests = b.addTest("src/util.zig");
     exe_tests.addAssemblyFile("ckb-std/src/syscall.S");
-    exe_tests.addPackage(.{
-        .name = "ckb_std",
-        .path = .{ .path = "ckb-std/src/ckb_std.zig" },
-    });
+    exe_tests.addPackagePath("ckb_std", "ckb-std/src/ckb_std.zig");
     exe_tests.setTarget(std.zig.CrossTarget{
         .cpu_arch = .riscv64,
         .os_tag = .linux,
