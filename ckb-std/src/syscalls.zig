@@ -50,7 +50,7 @@ fn sysLoad(
         2 => error.ItemMissing,
         3 => error.SliceOutOfBound,
         4 => error.WrongFormat,
-        else => unreachable,
+        else => error.UnknownSyscallError,
     };
 }
 

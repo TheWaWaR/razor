@@ -50,6 +50,9 @@ pub fn build(b: *std.build.Builder) void {
     exe.addPackagePath("ckb_std", "ckb-std/src/ckb_std.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
+    if (mode != .Debug) {
+        exe.strip = true;
+    }
     exe.install();
 
     const run_cmd = exe.run();

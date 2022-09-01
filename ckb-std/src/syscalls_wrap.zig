@@ -12,7 +12,8 @@ const HeaderField = consts.HeaderField;
 const InputField = consts.InputField;
 const ScriptHashType = types.ScriptHashType;
 
-const BUF_SIZE: usize = 256;
+// NOTE: small value have better performance
+const BUF_SIZE: usize = 64;
 
 // Load dynamically sized data
 fn loadData(
@@ -21,13 +22,16 @@ fn loadData(
     allocator: mem.Allocator,
 ) SysError![]u8 {
     var result_buf: []u8 = try allocator.alloc(u8, BUF_SIZE);
-    const size = try loader.call(context, result_buf, 0);
-    if (size > BUF_SIZE) {
-        result_buf = try allocator.realloc(result_buf, size);
-        const new_size = try loader.call(context, result_buf[BUF_SIZE..size], BUF_SIZE);
-        assert(new_size + BUF_SIZE == size);
+    const total_size = try loader.call(context, result_buf, 0);
+    if (total_size > BUF_SIZE) {
+        result_buf = try allocator.realloc(result_buf, total_size);
+        const new_size = try loader.call(context, result_buf[BUF_SIZE..total_size], BUF_SIZE);
+        if (new_size + BUF_SIZE != total_size) {
+            // This must not happen.
+            return error.UnknownSyscallError;
+        }
     }
-    return result_buf[0..size];
+    return result_buf[0..total_size];
 }
 
 const Loader = union(enum) {

@@ -1,17 +1,21 @@
-BUILD_MODE?=-Drelease-small=true
+ALL_SRC := $(wildcard src/*.zig)
+ALL_CKB_STD_SRC := $(wildcard ckb-std/src/*.zig)
 
-build: zig-out/bin/razor
+zig-out/debug/razor: $(ALL_SRC) $(ALL_CKB_STD_SRC)
+	zig build --prefix-exe-dir debug
+	ls -l $@ && ls -hl $@
 
-zig-out/bin/razor: src/main.zig src/_start.zig
-	zig build ${BUILD_MODE}
-	ls -rShl zig-out/bin/razor
-	riscv64-unknown-elf-strip zig-out/bin/razor
-	ls -rShl zig-out/bin/razor
+run: zig-out/debug/razor
+	RUST_LOG=debug ckb-debugger --max-cycles 1000000000 --bin zig-out/debug/razor
 
-run: zig-out/bin/razor
-	RUST_LOG=debug ckb-debugger --max-cycles 1000000000 --bin zig-out/bin/razor
+zig-out/release-safe/razor: $(ALL_SRC) $(ALL_CKB_STD_SRC)
+	zig build -Drelease-safe=true --prefix-exe-dir release-safe
+	ls -l $@ && ls -hl $@
 
-test: zig-out/bin/razor
+run-release: zig-out/release-safe/razor
+	RUST_LOG=debug ckb-debugger --max-cycles 1000000000 --bin zig-out/release-safe/razor
+
+test: zig-out/debug/razor
 	cargo test --manifest-path rust-tests/Cargo.toml
 
 clean:

@@ -30,6 +30,7 @@ export fn kmain(c_argc: i32, c_argv: [*][*:0]u8) i8 {
 }
 
 pub fn panic(message: []const u8, _: ?*std.builtin.StackTrace) noreturn {
+    // FIXME: print rich info on debug, print nothing on release
     syscalls.debug(message);
     syscalls.exit(-1);
     while (true) {}

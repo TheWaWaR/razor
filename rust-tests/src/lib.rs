@@ -16,7 +16,8 @@ impl Default for Loader {
         path.push(dir);
         path.push("..");
         path.push("zig-out");
-        path.push("bin");
+        // TODO: control by env variable
+        path.push("debug");
         Loader(path)
     }
 }

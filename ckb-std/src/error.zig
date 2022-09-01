@@ -9,4 +9,6 @@ pub const SysError = error{
     SliceOutOfBound,
     /// Data encoding error
     WrongFormat,
+    /// Unknown syscall return error code
+    UnknownSyscallError,
 } || std.mem.Allocator.Error;
